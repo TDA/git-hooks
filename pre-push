@@ -1,0 +1,12 @@
+#!/bin/sh
+
+MESSAGE=$(git log -1 HEAD)
+
+if [[ "$MESSAGE" =~ .*x\.y\.com* ]]; then
+        echo "do action here"
+else
+        echo "do nothing"
+fi
+
+exit 1
+
