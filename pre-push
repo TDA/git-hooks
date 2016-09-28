@@ -7,6 +7,3 @@ if [[ "$MESSAGE" =~ .*x\.y\.com* ]]; then
 else
         echo "do nothing"
 fi
-
-exit 1
-
