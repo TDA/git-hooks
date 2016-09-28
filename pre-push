@@ -1,9 +1,20 @@
 #!/bin/sh
 
-MESSAGE=$(git log -1 HEAD)
+MESSAGE_BODY=$(git log @{push}.. --pretty=format:%b)
+# echo $MESSAGE_BODY
+COMMIT_HASHES=$(git log @{push}.. --oneline)
+COMMIT_HASHES_COUNT = $(echo $COMMIT_HASHES | awk '{ print } END { print NR }')
 
-if [[ "$MESSAGE" =~ .*x\.y\.com* ]]; then
-        echo "do action here"
+if [[ $COMMIT_HASHES_COUNT -ne 1 ]]; then
+        echo "Found multiple commit messages"
 else
-        echo "do nothing"
+        echo "Only one commit message"
 fi
+
+if [[ "$MESSAGE_BODY" =~ .*x\.y\.com.* ]]; then
+        echo "Found the commit message"
+else
+        echo "Did not find the commit message"
+fi
+
+exit 1
