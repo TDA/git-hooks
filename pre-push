@@ -1,20 +1,22 @@
 #!/bin/sh
 
-MESSAGE_BODY=$(git log @{push}.. --pretty=format:%b)
-# echo $MESSAGE_BODY
 COMMIT_HASHES=$(git log @{push}.. --oneline)
-COMMIT_HASHES_COUNT = $(echo $COMMIT_HASHES | awk '{ print } END { print NR }')
+COMMIT_HASHES_COUNT=$(echo "$COMMIT_HASHES" | wc -l)
 
 if [[ $COMMIT_HASHES_COUNT -ne 1 ]]; then
-        echo "Found multiple commit messages"
+  exec < /dev/tty
+  read -p "Found multiple commits, are you sure you want to proceed? [Y/n]: " choice
+  if [[ $choice != 'Y' ]]; then
+    exit 1
+  fi
 else
-        echo "Only one commit message"
+  echo "Only one commit message"
 fi
 
+MESSAGE_BODY=$(git log @{push}.. --pretty=format:%b)
+# echo $MESSAGE_BODY
 if [[ "$MESSAGE_BODY" =~ .*x\.y\.com.* ]]; then
-        echo "Found the commit message"
+  echo "Found the commit message"
 else
-        echo "Did not find the commit message"
+  echo "Did not find the commit message"
 fi
-
-exit 1
